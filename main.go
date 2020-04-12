@@ -1,7 +1,8 @@
 package main
 
 import (
-	routes "housings-api/delivery/routes"
+	deliver "housings-api/auth/delivery/http"
+	"housings-api/auth/usecase"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -13,6 +14,7 @@ func main() {
 	apiRouter := r.PathPrefix("/api").Subrouter()
 	usersRouter := apiRouter.PathPrefix("/users").Subrouter()
 
-	usersRouter.HandleFunc("/signIn", routes.SignIn).Methods(http.MethodPost)
+	deliver.HandleSignIn(usersRouter, usecase.SignIn)
+
 	http.ListenAndServe(":80", r)
 }
