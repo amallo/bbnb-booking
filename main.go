@@ -16,7 +16,7 @@ func main() {
 	usersRouter := apiRouter.PathPrefix("/users").Subrouter()
 	signInUseCase := usecase.SignIn(repository.FindUser, session.CreateWithSecret("secret"))
 
-	httpDeliver.HandleSignIn(usersRouter, signIn)
+	httpDeliver.HandleSignIn(usersRouter, signInUseCase)
 
 	http.ListenAndServe(":80", r)
 }
