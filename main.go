@@ -1,7 +1,9 @@
 package main
 
 import (
-	deliver "housings-api/auth/delivery/http"
+	httpDeliver "housings-api/auth/delivery/http"
+	repository "housings-api/auth/repository/mongodb"
+	session "housings-api/auth/session"
 	"housings-api/auth/usecase"
 	"net/http"
 
@@ -10,11 +12,11 @@ import (
 
 func main() {
 	r := mux.NewRouter()
-
 	apiRouter := r.PathPrefix("/api").Subrouter()
 	usersRouter := apiRouter.PathPrefix("/users").Subrouter()
+	signInUseCase := usecase.SignIn(repository.FindUser, session.CreateWithSecret("secret"))
 
-	deliver.HandleSignIn(usersRouter, usecase.SignIn)
+	httpDeliver.HandleSignIn(usersRouter, signIn)
 
 	http.ListenAndServe(":80", r)
 }

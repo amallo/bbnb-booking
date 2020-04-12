@@ -4,15 +4,13 @@ import (
 	"encoding/json"
 	"housings-api/auth/usecase"
 	"net/http"
-	"time"
 
-	"github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/mux"
 )
 
 type signInPayload struct {
-	email    string
-	password string
+	Email    string
+	Password string
 }
 
 type signInResponse struct {
@@ -20,10 +18,7 @@ type signInResponse struct {
 	Message       string
 }
 
-// An action transitions stochastically to a resulting score.
-//type action func(current score) (result score, turnIsOver bool)
-
-func HandleSignIn(router *mux.Router, useCase usecase.SignInUseCase) {
+func HandleSignIn(router *mux.Router, signIn usecase.SignInFunc) {
 
 	router.HandleFunc("/signIn", func(w http.ResponseWriter, r *http.Request) {
 		/**
@@ -37,25 +32,17 @@ func HandleSignIn(router *mux.Router, useCase usecase.SignInUseCase) {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
-		useCase(usecase.SignInCredentials{Email: payload.email, Password: payload.password})
 
 		/**
-			Generate a new token from email
+			Signin with email and password
 		**/
-		token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-			"iss":   "housings-users-api",                                  // issuer
-			"sub":   "auth",                                                // subject
-			"aud":   "webstart students",                                   // audience
-			"email": payload.email,                                         // extra info
-			"nbf":   time.Date(2015, 10, 10, 12, 0, 0, 0, time.UTC).Unix(), // not before
-		})
-		// md5 password ?
-		tokenString, err := token.SignedString([]byte("secret"))
+		token, err := signIn(usecase.Credentials{Email: payload.Email, Password: payload.Password})
 		if err != nil {
-			w.WriteHeader(http.StatusForbidden)
+			http.Error(w, err.Error(), http.StatusForbidden)
 			return
 		}
-		loginResponse := signInResponse{tokenString, "OK"}
+
+		loginResponse := signInResponse{*token, "OK"}
 		json, err := json.Marshal(loginResponse)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
