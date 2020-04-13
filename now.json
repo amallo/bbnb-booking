@@ -9,22 +9,11 @@
     ],
     "routes": [
         {
-            "src": "/api/(.*)",
-            "dest": "/api/$1"
-        },
-        {
-            "src": "/redirect-test",
-            "status": 302,
-            "headers": {
-                "location": "https://google.com"
-            }
-        },
-        {
-            "src": "/(.*)",
-            "dest": "/www/$1",
-            "headers": {
-                "x-request-path": "$1"
-            }
+            "src": "/api/users/signIn",
+            "dest": "/api/users.go",
+            "methods": [
+                "POST"
+            ]
         }
     ]
 }
