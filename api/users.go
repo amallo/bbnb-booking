@@ -1,14 +1,15 @@
 package api
 
 import (
-	"bbnb-booking/routes"
+	"bbnb-booking/auth/handlers"
+	repository "bbnb-booking/auth/repository/mongodb"
+	"bbnb-booking/auth/session"
+	"bbnb-booking/auth/usecase"
 	"net/http"
-
-	"github.com/gorilla/mux"
 )
 
-func Handler(w http.ResponseWriter, r *http.Request) {
-	apiRouter := mux.NewRouter()
-	routes.HandleSignIn(apiRouter, "/signIn", "secret")
-	apiRouter.ServeHTTP(w, r)
+func SignInHandler(w http.ResponseWriter, r *http.Request) {
+	signInUseCase := usecase.SignIn(repository.FindUser, session.CreateWithSecret("secret"))
+	signInHandler := handlers.SignIn(signInUseCase)
+	signInHandler(w, r)
 }
