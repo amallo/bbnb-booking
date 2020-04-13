@@ -1,11 +1,16 @@
 package main
 
 import (
-	"bbnb-booking/router"
+	"bbnb-booking/routes"
 	"net/http"
+
+	"github.com/gorilla/mux"
 )
 
 func main() {
-	router := router.Boostrap("secret")
+	router := mux.NewRouter()
+	apiRouter := router.PathPrefix("/api").Subrouter()
+	usersRouter := apiRouter.PathPrefix("/users").Subrouter()
+	routes.HandleSignIn(usersRouter, "secret")
 	http.ListenAndServe(":80", router)
 }
