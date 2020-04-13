@@ -10,12 +10,8 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func HandleSignIn(router *mux.Router, secret string) {
-
-	/**
-	  Sign in routes here
-	**/
+func HandleSignIn(router *mux.Router, routeName string, secret string) {
 	signInUseCase := usecase.SignIn(repository.FindUser, session.CreateWithSecret(secret))
 	signInHandler := handlers.SignIn(signInUseCase)
-	router.HandleFunc("/signIn", signInHandler).Methods(http.MethodPost)
+	router.HandleFunc(routeName, signInHandler).Methods(http.MethodPost)
 }

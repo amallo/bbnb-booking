@@ -8,7 +8,7 @@ import (
 )
 
 func Handler(w http.ResponseWriter, r *http.Request) {
-	router := mux.NewRouter()
-	routes.HandleSignIn(router, "secret")
-	router.ServeHTTP(w, r)
+	apiRouter := mux.NewRouter()
+	routes.HandleSignIn(apiRouter, "/signIn", "secret")
+	apiRouter.ServeHTTP(w, r)
 }
