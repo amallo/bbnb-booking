@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"bbnb-booking/auth/usecase"
+	"bbnb-booking/models"
 	"encoding/json"
 	"net/http"
 )
@@ -12,7 +13,8 @@ type signInPayload struct {
 }
 
 type signInResponse struct {
-	Authorization string
+	User          *models.User
+	Authorization *string
 	Message       string
 }
 
@@ -33,14 +35,14 @@ func SignIn(signIn usecase.SignInFunc) http.HandlerFunc {
 		/**
 			Signin with email and password
 		**/
-		token, err := signIn(usecase.Credentials{Email: payload.Email, Password: payload.Password})
+		token, user, err := signIn(usecase.Credentials{Email: payload.Email, Password: payload.Password})
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusForbidden)
 			return
 		}
 
-		loginResponse := signInResponse{*token, "OK"}
-		json, err := json.Marshal(loginResponse)
+		response := signInResponse{User: user, Authorization: token, Message: "Ok"}
+		json, err := json.Marshal(response)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return

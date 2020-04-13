@@ -3,14 +3,22 @@ package usecase
 import (
 	repository "bbnb-booking/auth/repository"
 	session "bbnb-booking/auth/session"
+	"bbnb-booking/models"
 )
 
 func SignIn(findUser repository.FindUserFunc, signSession session.SignSessionFunc) SignInFunc {
-	return func(credentials Credentials) (*string, error) {
+	return func(credentials Credentials) (*string, *models.User, error) {
 		user, err := findUser(credentials.Email, credentials.Password)
 		if err != nil {
-			return nil, err
+			return nil, nil, err
 		}
-		return signSession(user.Email)
+		// Token should be enough to identify user with their email and id
+		tokenResult, err := signSession(user.Email)
+		if err != nil {
+			return nil, nil, err
+		}
+		// We NEVER return password here
+		userResult := models.User{Email: user.Email}
+		return tokenResult, &userResult, nil
 	}
 }
