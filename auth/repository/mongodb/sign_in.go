@@ -1,8 +1,8 @@
 package repository
 
 import (
+	"bbnb-booking/auth/repository"
 	"fmt"
-	"housings-api/auth/repository"
 )
 
 func FindUser(email string, password string) (*repository.User, error) {
