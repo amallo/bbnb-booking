@@ -1,11 +1,9 @@
-package delivery
+package handlers
 
 import (
+	"bbnb-booking/auth/usecase"
 	"encoding/json"
-	"housings-api/auth/usecase"
 	"net/http"
-
-	"github.com/gorilla/mux"
 )
 
 type signInPayload struct {
@@ -18,9 +16,8 @@ type signInResponse struct {
 	Message       string
 }
 
-func HandleSignIn(router *mux.Router, signIn usecase.SignInFunc) {
-
-	router.HandleFunc("/signIn", func(w http.ResponseWriter, r *http.Request) {
+func SignIn(signIn usecase.SignInFunc) HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
 		/**
 		  Decode payload
 		**/
@@ -51,5 +48,5 @@ func HandleSignIn(router *mux.Router, signIn usecase.SignInFunc) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
 		w.Write(json)
-	}).Methods(http.MethodPost)
+	}
 }

@@ -1,8 +1,8 @@
 package usecase
 
 import (
-	repository "housings-api/auth/repository"
-	session "housings-api/auth/session"
+	repository "bbnb-booking/auth/repository"
+	session "bbnb-booking/auth/session"
 )
 
 func SignIn(findUser repository.FindUserFunc, signSession session.SignSessionFunc) SignInFunc {

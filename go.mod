@@ -1,4 +1,4 @@
-module housings-api
+module bbnb-booking
 
 go 1.14
 
