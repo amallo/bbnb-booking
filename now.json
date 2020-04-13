@@ -1,0 +1,30 @@
+{
+    "name": "bbnb-booking",
+    "version": 2,
+    "builds": [
+        {
+            "src": "api/*.go",
+            "use": "@now/go"
+        }
+    ],
+    "routes": [
+        {
+            "src": "/api/(.*)",
+            "dest": "/api/$1"
+        },
+        {
+            "src": "/redirect-test",
+            "status": 302,
+            "headers": {
+                "location": "https://google.com"
+            }
+        },
+        {
+            "src": "/(.*)",
+            "dest": "/www/$1",
+            "headers": {
+                "x-request-path": "$1"
+            }
+        }
+    ]
+}
