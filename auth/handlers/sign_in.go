@@ -16,7 +16,7 @@ type signInResponse struct {
 	Message       string
 }
 
-func SignIn(signIn usecase.SignInFunc) HandlerFunc {
+func SignIn(signIn usecase.SignInFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		/**
 		  Decode payload
