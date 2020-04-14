@@ -14,6 +14,7 @@ func FindUser(database *mongo.Database) FindUserFunc {
 	return func(email string, password string) (*User, error) {
 		result := User{}
 		filter := bson.D{{email, password}}
+
 		/** Return an error if not user found **/
 		err := collection.FindOne(context.Background(), filter).Decode(&result)
 		if err != nil {

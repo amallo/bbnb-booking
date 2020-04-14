@@ -2,24 +2,24 @@ package data
 
 import (
 	"context"
-	"log"
 
+	"github.com/BenLubar/memoize"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func ConnectToDatase(uri string, dbName string) *mongo.Database {
+func connectToDatase(uri string, dbName string) (*mongo.Database, error) {
 	clientOptions := options.Client().ApplyURI(uri)
 	client, err := mongo.Connect(context.TODO(), clientOptions)
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 
 	err = client.Ping(context.TODO(), nil)
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
-	return client.Database(dbName)
+	return client.Database(dbName), nil
 }
 
-func Memoize
+var MemoConnectToDatase = memoize.Memoize(connectToDatase).(func(uri string, dbName string) (*mongo.Database, error))

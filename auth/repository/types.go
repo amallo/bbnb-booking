@@ -3,6 +3,7 @@ package repository
 type FindUserFunc = func(email string, password string) (user *User, err error)
 
 type User struct {
-	Id    string
-	Email string
+	_Id      string
+	Email    string
+	Password string
 }

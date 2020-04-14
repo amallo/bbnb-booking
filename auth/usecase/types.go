@@ -7,4 +7,4 @@ type Credentials struct {
 	Password string
 }
 
-type SignInFunc = func(Credentials) (*string, *models.User, error)
+type AuthFunc = func(Credentials) (*string, *models.User, error)

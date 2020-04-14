@@ -21,5 +21,3 @@ func WithViperConfig(envFile string) ReadConfigKeyFunc {
 		return value
 	}
 }
-
-type ReadConfigKeyFunc = func(key string) string

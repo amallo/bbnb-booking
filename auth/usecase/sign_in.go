@@ -6,7 +6,7 @@ import (
 	"bbnb-booking/models"
 )
 
-func SignIn(findUser repository.FindUserFunc, signSession session.SignSessionFunc) SignInFunc {
+func SignIn(findUser repository.FindUserFunc, signSession session.SignSessionFunc) AuthFunc {
 	return func(credentials Credentials) (*string, *models.User, error) {
 		user, err := findUser(credentials.Email, credentials.Password)
 		if err != nil {

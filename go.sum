@@ -1,4 +1,6 @@
 cloud.google.com/go v0.26.0/go.mod h1:aQUYkXzVsufM+DwF1aE+0xfcU+56JwCaLick0ClmMTw=
+github.com/BenLubar/memoize v0.0.0-20151117215343-6fdb23a94b24 h1:h1JKqPdp+yoBTdU/V1j5sfz3B14zYnQiRaW9R0SvjAg=
+github.com/BenLubar/memoize v0.0.0-20151117215343-6fdb23a94b24/go.mod h1:1fx+JF3OhqXT2LFhAIzYwBN63knep289KZ7//KqiPNk=
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/OneOfOne/xxhash v1.2.2/go.mod h1:HSdplMjZKSmBqAxg5vPj2TmRDmfkzw+cTzAElWljhcU=
 github.com/alecthomas/template v0.0.0-20160405071501-a0175ee3bccc/go.mod h1:LOuyumcjzFXgccqObfd/Ljyb9UuFJ6TxHnclSeseNhc=
