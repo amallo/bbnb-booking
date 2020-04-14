@@ -10,20 +10,14 @@ import (
 	"log"
 	"net/http"
 	"os"
-
-	"go.mongodb.org/mongo-driver/mongo"
 )
 
-var database *mongo.Database
-
-func SignInHandler(w http.ResponseWriter, r *http.Request) {
+func SignUpHandler(w http.ResponseWriter, r *http.Request) {
 
 	/** Connect to the mongo database **/
 	getConfig := config.WithEnvConfig(os.Getenv)
 	mongoUri := getConfig("MONGO_URL")
 	database, err := data.MemoConnectToDatase(mongoUri, "bookings")
-
-	/** If invalid database handler then stop execution**/
 	if err != nil {
 		log.Fatal(err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -31,7 +25,8 @@ func SignInHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	findUserByEmailAndPassword := repository.FindUser(database)
-	signInUseCase := usecase.SignIn(findUserByEmailAndPassword, session.CreateWithSecret("secret"))
-	signInHandler := handlers.SignIn(signInUseCase)
-	signInHandler(w, r)
+	insertUser := repository.InsertUser(database)
+	useCase := usecase.SignUpUseCase(findUserByEmailAndPassword, insertUser, session.CreateWithSecret("secret"))
+	handler := handlers.SignUpHandler(useCase)
+	handler(w, r)
 }
