@@ -10,7 +10,11 @@ import (
 	"log"
 	"net/http"
 	"os"
+
+	"go.mongodb.org/mongo-driver/mongo"
 )
+
+var database *mongo.Database
 
 func SignInHandler(w http.ResponseWriter, r *http.Request) {
 
