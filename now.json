@@ -1,5 +1,4 @@
 {
-    "name": "bbnb-booking",
     "version": 2,
     "builds": [
         {
@@ -9,8 +8,15 @@
     ],
     "routes": [
         {
-            "src": "/api/users/signIn",
-            "dest": "/api/users.go",
+            "src": "/api/users/signin",
+            "dest": "/api/sign_in.go",
+            "methods": [
+                "POST"
+            ]
+        },
+        {
+            "src": "/api/users/signup",
+            "dest": "/api/sign_up.go",
             "methods": [
                 "POST"
             ]
