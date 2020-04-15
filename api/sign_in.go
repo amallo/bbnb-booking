@@ -1,32 +1,32 @@
 package api
 
 import (
-	"bbnb-booking/auth/handlers"
+	authHandlers "bbnb-booking/auth/handlers"
 	"bbnb-booking/auth/repository"
 	"bbnb-booking/auth/session"
 	"bbnb-booking/auth/usecase"
 	"bbnb-booking/config"
 	"bbnb-booking/data"
-	"log"
+	handlers "bbnb-booking/handlers"
 	"net/http"
-	"os"
 )
 
-func SignInHandler(w http.ResponseWriter, r *http.Request) {
+func signInHandler(w http.ResponseWriter, r *http.Request) ([]byte, *handlers.ApiHandlerError) {
 
 	/** Connect to the mongo database **/
-	getConfig := config.WithEnvConfig(os.Getenv)
-	mongoUri := getConfig("MONGO_URL")
-	database, err := data.MemoConnectToDatase(mongoUri, "bookings")
-
+	conf := config.GetEnvConfig()
+	database, err := data.MemoConnectToDatase(conf.DatabaseURI, "bookings")
 	if err != nil {
-		log.Fatal(err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
+		return nil, &handlers.ApiHandlerError{Code: http.StatusInternalServerError, Error: err, Message: "Unable to connect to database"}
 	}
 
-	findUserByEmailAndPassword := repository.FindUser(database)
-	signInUseCase := usecase.SignInUseCase(findUserByEmailAndPassword, session.CreateWithSecret("secret"))
-	signInHandler := handlers.SignInHandler(signInUseCase)
-	signInHandler(w, r)
+	findUser := repository.FindUser(database)
+	createSession := session.CreateWithSecret("secret")
+	signInUseCase := usecase.SignInUseCase(findUser, createSession)
+	signInHandler := authHandlers.SignInHandler(signInUseCase)
+	return signInHandler(w, r)
+}
+
+func SignInHandler(w http.ResponseWriter, r *http.Request) {
+	handlers.ApiHandler(signInHandler)(w, r)
 }
