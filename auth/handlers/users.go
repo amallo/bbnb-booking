@@ -2,8 +2,8 @@ package handlers
 
 import (
 	"bbnb-booking/auth/usecase"
+	"bbnb-booking/handlers"
 	"bbnb-booking/models"
-	"encoding/json"
 	"net/http"
 )
 
@@ -17,18 +17,15 @@ type userResponse struct {
 	Authorization *string      `json:"authorization"`
 }
 
-func SignInHandler(signIn usecase.AuthFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
+func SignInHandler(signIn usecase.AuthFunc) handlers.ApiHandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) ([]byte, *handlers.ApiHandlerError) {
 		/**
 		  Decode payload
 		**/
-		decoder := json.NewDecoder(r.Body)
-		decoder.DisallowUnknownFields()
 		payload := userPayload{}
-		err := decoder.Decode(&payload)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
-			return
+		errDecode := handlers.DecodePayload(r.Body, &payload)
+		if errDecode != nil {
+			return nil, errDecode
 		}
 
 		/**
@@ -36,53 +33,48 @@ func SignInHandler(signIn usecase.AuthFunc) http.HandlerFunc {
 		**/
 		token, user, err := signIn(usecase.Credentials{Email: payload.Email, Password: payload.Password})
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusForbidden)
-			return
+			return nil, &handlers.ApiHandlerError{Code: http.StatusForbidden, Message: err.Error(), Error: err}
 		}
 
+		/**
+			Return response
+		**/
 		response := userResponse{User: user, Authorization: token}
-		json, err := json.Marshal(response)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
+		json, errEncode := handlers.EncodeResponse(response)
+		if errEncode != nil {
+			return nil, errEncode
 		}
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		w.Write(json)
+		return json, nil
 	}
 }
 
-func SignUpHandler(signup usecase.AuthFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
+func SignUpHandler(signup usecase.AuthFunc) handlers.ApiHandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) ([]byte, *handlers.ApiHandlerError) {
 		/**
 		  Decode payload
 		**/
-		decoder := json.NewDecoder(r.Body)
-		decoder.DisallowUnknownFields()
 		payload := userPayload{}
-		err := decoder.Decode(&payload)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
-			return
+		errDecode := handlers.DecodePayload(r.Body, &payload)
+		if errDecode != nil {
+			return nil, errDecode
 		}
 
 		/**
 			Signup with email and password
 		**/
-		token, user, err := signup(usecase.Credentials{Email: payload.Email, Password: payload.Password})
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusForbidden)
-			return
+		token, user, errUseCase := signup(usecase.Credentials{Email: payload.Email, Password: payload.Password})
+		if errUseCase != nil {
+			return nil, &handlers.ApiHandlerError{Code: http.StatusForbidden, Message: errUseCase.Error(), Error: errUseCase}
 		}
 
+		/**
+			Return response
+		**/
 		response := userResponse{User: user, Authorization: token}
-		json, err := json.Marshal(response)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
+		json, errEncode := handlers.EncodeResponse(response)
+		if errEncode != nil {
+			return nil, errEncode
 		}
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		w.Write(json)
+		return json, nil
 	}
 }

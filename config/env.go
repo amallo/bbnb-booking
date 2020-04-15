@@ -1,7 +1,16 @@
 package config
 
-func WithEnvConfig(getEnv func(key string) string) ReadConfigKeyFunc {
-	return func(key string) string {
-		return getEnv(key)
+import "os"
+
+type Config struct {
+	DatabaseURI string
+}
+
+func GetEnvConfig() Config {
+
+	conf := Config{
+		DatabaseURI: os.Getenv("MONGO_URL"),
 	}
+
+	return conf
 }
