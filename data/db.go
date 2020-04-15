@@ -2,6 +2,7 @@ package data
 
 import (
 	"context"
+	"time"
 
 	"github.com/BenLubar/memoize"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -10,12 +11,14 @@ import (
 
 func connectToDatase(uri string, dbName string) (*mongo.Database, error) {
 	clientOptions := options.Client().ApplyURI(uri)
-	client, err := mongo.Connect(context.TODO(), clientOptions)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+	client, err := mongo.Connect(ctx, clientOptions)
 	if err != nil {
 		return nil, err
 	}
 
-	err = client.Ping(context.TODO(), nil)
+	err = client.Ping(ctx, nil)
 	if err != nil {
 		return nil, err
 	}
