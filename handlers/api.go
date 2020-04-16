@@ -6,11 +6,19 @@ import (
 	"net/http"
 )
 
+type ErrorResponse struct {
+	Message string `json:"message"`
+}
+
 func ApiHandler(fn ApiHandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
 		json, err := fn(w, r)
 		if err != nil {
-			http.Error(w, err.Message, err.Code)
+			response := ErrorResponse{Message: err.Message}
+			jsonErr, _ := EncodeResponse(response)
+			w.WriteHeader(err.Code)
+			w.Write(jsonErr)
 			return
 		}
 		w.Header().Set("Content-Type", "application/json")
