@@ -1,0 +1,84 @@
+{
+    "categories": [
+        {
+            "name": "Homes",
+            "photo": "homesCategory"
+        },
+        {
+            "name": "Experiences",
+            "photo": "experiencesCategory"
+        },
+        {
+            "name": "Restaurants",
+            "photo": "restaurantsCategory"
+        }
+    ],
+    "experiences": [
+        {
+            "id": 1,
+            "photo": "listing1",
+            "type": "BOAT RIDE",
+            "title": "Sail past Japan's largest port with a certified skipper",
+            "location": "Tokyo, Japan",
+            "price": 60,
+            "priceType": "per person",
+            "stars": 29,
+            "color": "gray04"
+        },
+        {
+            "id": 2,
+            "photo": "listing2",
+            "type": "CHEESE TASTING",
+            "title": "Funny cheesemonger takes you on a Tour de Fromage",
+            "location": "Paris, France",
+            "price": 70,
+            "priceType": "per person",
+            "stars": 4,
+            "color": "darkOrange"
+        },
+        {
+            "id": 3,
+            "photo": "listing3",
+            "type": "BIKE RIDE",
+            "title": "Cycling KFC & Drinking for your Seoul",
+            "location": "Seoul, South Korea",
+            "price": 47,
+            "priceType": "per person",
+            "stars": 30,
+            "color": "black"
+        },
+        {
+            "id": 4,
+            "photo": "listing4",
+            "type": "BIKE RIDE",
+            "title": "Cycle through side streets with a local",
+            "location": "Amsterdam, Netherlands",
+            "price": 57,
+            "priceType": "per person",
+            "stars": 70,
+            "color": "brown01"
+        },
+        {
+            "id": 5,
+            "photo": "listing5",
+            "type": "SURFING",
+            "title": "Surf Bondi's waves, then eat & drink like a local",
+            "location": "Sydney, Australia",
+            "price": 61,
+            "priceType": "per person",
+            "stars": 66,
+            "color": "blue",
+        },
+        {
+            "id": 6,
+            "photo": "listing6",
+            "type": "DRAWING CLASS",
+            "title": "A drawing/walking tour in Montmartre",
+            "location": "Paris, France",
+            "price": 55,
+            "priceType": "per person",
+            "stars": 15,
+            "color": "brown02"
+        }
+    ]
+}

@@ -20,6 +20,10 @@
             "methods": [
                 "POST"
             ]
+        },
+        {
+            "source": "/api/data",
+            "destination": "/data/data.json"
         }
     ]
 }
