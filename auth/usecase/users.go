@@ -35,7 +35,7 @@ func SignUpUseCase(
 		_, err := findUser(repository.Criteria{"email": credentials.Email})
 		if err != nil {
 			if err.(*repository.RepositoryError).ErrNoDocuments() {
-				user, err := insertUser(credentials.Email, credentials.Password)
+				user, err := insertUser(repository.Criteria{"email": credentials.Email, "password": credentials.Password})
 				// Cannot insert, forward database error
 				if err != nil {
 					return nil, nil, fmt.Errorf("Cannot signup: %s", err.Error())

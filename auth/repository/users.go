@@ -30,15 +30,19 @@ func FindUser(database *mongo.Database) FindUserFunc {
 func InsertUser(database *mongo.Database) InsertUserFunc {
 	/** Initialize collection **/
 	collection := database.Collection("users")
-	return func(email string, password string) (*UserRow, error) {
-		res, err := collection.InsertOne(context.Background(), bson.M{"email": email, "password": password})
+	return func(criteria Criteria) (*UserRow, error) {
+		parameters := bson.M{}
+		for key, value := range criteria {
+			parameters[key] = value
+		}
+		res, err := collection.InsertOne(context.Background(), parameters)
 		if err != nil {
-			return nil, &RepositoryError{Message: fmt.Sprintf("Cannot create user %s", email), Cause: err}
+			return nil, &RepositoryError{Message: fmt.Sprintf("Cannot create user"), Cause: err}
 		}
 		newUser := UserRow{
 			ID:       res.InsertedID.(primitive.ObjectID),
-			Email:    email,
-			Password: password,
+			Email:    parameters["email"].(string),
+			Password: parameters["password"].(string),
 		}
 		return &newUser, nil
 	}
