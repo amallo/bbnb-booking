@@ -22,7 +22,7 @@ func signUpHandler(w http.ResponseWriter, r *http.Request) ([]byte, *handlers.Ap
 
 	findUser := repository.FindUser(database)
 	insertUser := repository.InsertUser(database)
-	useCase := usecase.SignUpUseCase(findUser, insertUser, session.CreateWithSecret("secret"))
+	useCase := usecase.SignUpUseCase(findUser, insertUser, session.MD5Hash, session.CreateWithSecret("secret"))
 	handler := authHandlers.SignUpHandler(useCase)
 	return handler(w, r)
 }
