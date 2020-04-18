@@ -9,16 +9,19 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-func FindUser(database *mongo.Database) FindUserByEmailAndPasswordFunc {
+func FindUser(database *mongo.Database) FindUserFunc {
 	/** Initialize collection **/
 	collection := database.Collection("users")
-	return func(email string, password string) (*UserRow, error) {
+	return func(criteria Criteria) (*UserRow, error) {
 		result := UserRow{}
-		filter := bson.M{"email": email, "password": password}
+		filter := bson.M{}
+		for key, value := range criteria {
+			filter[key] = value
+		}
 
 		err := collection.FindOne(context.Background(), filter).Decode(&result)
 		if err != nil {
-			return nil, &RepositoryError{Message: fmt.Sprintf("User %s not found", email), Cause: err}
+			return nil, &RepositoryError{Message: fmt.Sprintf("User not found"), Cause: err}
 		}
 		return &result, nil
 	}
